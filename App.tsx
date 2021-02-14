@@ -5,7 +5,7 @@ import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import { Provider } from 'react-redux';
 
-import AppNavigator from './navigation/AppNavigator';
+import AppNavigator, { RootNavigator } from './navigation/AppNavigator';
 import { configureStore, AppStore } from './store/index'
 
 const fetchFonts = () => {
@@ -52,7 +52,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <AppNavigator />
+      <RootNavigator />
     </Provider>
   );
 }

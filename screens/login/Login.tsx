@@ -3,96 +3,121 @@ import {
   ScrollView,
   View,
   Text,
-  Image,
   StyleSheet,
+  Platform,
+  SafeAreaView,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-
-import { Button } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IoIcon from 'react-native-vector-icons/Ionicons';
-
+import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 
-import { Input } from 'react-native-elements';
+import { sessionActions } from '../../store/session/session.reducer'
+import { sessionSelectors } from '../../store/session/session.selector';
+import CustomHeader from '../../components/CustomHeader/CustomHeader';
+import { AuthCredentialsDto } from '../../api/api'
 
 import { Colors } from '../../constants/Colors';
-import { chatActions } from '../../store/chat/chat.reducer';
-import { chatSelectors } from '../../store/chat/chat.selector';
-
 
 const LoginScreen = (props) => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { handleSubmit, control, errors } = useForm();
 
-  const dispatchFirstAction = () => {
-    dispatch(chatActions.addMessageSaga('ala ma kota2'))
-  }
-
-  const chatMessage = useSelector(chatSelectors.userMessage);
-
-  const { handleSubmit, control } = useForm();
-
-  const onSubmit = (data) => {
-    console.log(data, 'data');
+  const onSubmit = (data: AuthCredentialsDto): void => {
+    const formattedData = {
+      signInData: data
+    }
+    dispatch(sessionActions.loginSaga(formattedData))
   };
+
+  const accessToken = useSelector(sessionSelectors.accessToken)
 
   return (
-    <ScrollView>
-      <View style={styles.inputStyle}>
-        <Controller
-          name="name"
-          control={control}
-          render={({ onChange, value }) => (
-            <Input
-              placeholder="name"
-              value={value}
-              onChangeText={(text) => onChange(text)}
-            />
-          )}
-        />
-        <Button onPress={handleSubmit(onSubmit)} title="Submit" />
-      </View>
-      <View style={styles.actions}>
-        <Button
-          buttonStyle={styles.button}
-          containerStyle={styles.containerButton}
-          title="Go to register"
-          onPress={() => props.navigation.push('RegisterScreen')}
-          icon={
-            <Icon
-              name="arrow-right"
-              size={15}
-              color="white"
-              style={{ paddingRight: 10 }}
-            />
-          }
-        />
+    <SafeAreaView style={{flex: 1}}>
+      <CustomHeader title="Login" isHome={false} />
+      <ScrollView>
+        <View style={styles.inputStyle}>
+          <Controller
+            defaultValue=''
+            name="username"
+            control={control}
+            render={({ onChange, value }) => (
+              <Input
+                placeholder="Nickname"
+                value={value}
+                onChangeText={(text) => onChange(text)}
+                errorMessage={errors?.username?.message}
+                errorProps={errors.username}
+              />
+            )}
+            rules={{
+              required: { value: true, message: 'Username is required' },
+            }}
 
-        <Button
-          title="try store"
-          onPress={dispatchFirstAction}
-        />
+          />
+          <Controller
+            defaultValue=''
+            name="password"
+            control={control}
+            render={({ onChange, value }) => (
+              <Input
+                placeholder="Password"
+                value={value}
+                secureTextEntry
+                onChangeText={(text) => onChange(text)}
+                errorMessage={errors?.password?.message}
+                errorProps={errors.password}
+              />
+            )}
+            rules={{
+              required: { value: true, message: 'Password is required' },
+            }}
+          />
 
-        <Text>Store: {chatMessage}</Text>
-      </View>
-      <Text style={styles.price}>Login Screen</Text>
-    </ScrollView>
+          <Button onPress={handleSubmit(onSubmit)} title="Submit" />
+        </View>
+        <View>
+          <Text>
+            {accessToken}
+          </Text>
+        </View>
+        <View style={styles.actions}>
+          <Button
+            buttonStyle={styles.button}
+            containerStyle={styles.containerButton}
+            title="Go to register"
+            onPress={() => navigation.navigate('Register')}
+            icon={
+              <Icon
+                name="arrow-right"
+                size={15}
+                color="white"
+                style={{ paddingRight: 10 }}
+              />
+            }
+          />
+
+          <Button
+            buttonStyle={styles.button}
+            containerStyle={styles.containerButton}
+            title="Go to product screen"
+            onPress={() => navigation.navigate('Product')}
+            icon={
+              <Icon
+                name="arrow-right"
+                size={15}
+                color="white"
+                style={{ paddingRight: 10 }}
+              />
+            }
+          />
+        </View>
+        <Text style={styles.price}>Login Screens</Text>
+      </ScrollView>
+    </SafeAreaView>
   );
-};
-
-export const screenOptions = (navData) => {
-  return {
-    headerTitle: 'Login',
-    headerLeft: () => (
-      <IoIcon.Button
-        name="menu"
-        size={25}
-        backgroundColor="#009387"
-        onPress={() => navData.navigation.openDrawer()}
-      >
-      </IoIcon.Button>
-    )
-  };
 };
 
 const styles = StyleSheet.create({
@@ -117,7 +142,6 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'red',
-
   },
   containerButton: {
     paddingHorizontal: 20,
