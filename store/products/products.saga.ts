@@ -1,4 +1,5 @@
 import { takeEvery } from 'redux-saga/effects'
+import { ListItem } from 'react-native-elements'
 
 import { OpenAPI, Service } from '../../api/api'
 
@@ -49,6 +50,27 @@ export function* addNewProduct(action: ProductsActions['addNewProductSaga']): Ge
   } catch (err) {
     console.log(err, 'err')
   }
+}
+
+
+export function* fetchAllProducts(action: ProductsActions['addNewProductSaga']): Generator {
+  OpenAPI.BASE = 'http://192.168.0.103:3000';
+  const accessToken = yield* select(sessionSelectors.accessToken);
+  console.log('accessTokenaccessTokenaccessToken', accessToken)
+  OpenAPI.TOKEN = accessToken;
+
+
+  console.log('fetchAllProducts')
+  try {
+    const result = yield* call(Service.productControllerGetTasks);
+    if (result) {
+      yield put(productsActions.setAllProducts(result))
+    } else {
+      console.log('result', result)
+    }
+  } catch (err) {
+    console.log(err, 'err')
+  }
 
 }
 
@@ -56,5 +78,6 @@ export function* addNewProduct(action: ProductsActions['addNewProductSaga']): Ge
 export function* productsSaga(): Generator {
   yield all([
     takeEvery(ProductsMessages.ADD_NEW_PRODUCT_SAGA, addNewProduct),
+    takeEvery(ProductsMessages.FETCH_ALL_PRODUCTS, fetchAllProducts),
   ])
 }

@@ -1,10 +1,12 @@
 import { createAction, createReducer, PayloadAction } from '@reduxjs/toolkit';
 
-import { CreateProductDto } from '../../api/api'
+import { CreateProductDto, Product } from '../../api/api'
 import { ActionsType, ProductsMessages } from '../consts/actionTypes'
 
 
 export class ProductsStore {
+  public products: Product[] | null = null;
+
   public newProduct: CreateProductDto | null = null;
 
   public errorMessage: string = '';
@@ -18,6 +20,8 @@ export const productsActions = {
   setNewProduct: createAction<CreateProductDto>(ProductsMessages.SET_NEW_PRODUCT),
   addNewProductSaga: createAction<CreateProductDto>(ProductsMessages.ADD_NEW_PRODUCT_SAGA),
   setAddProductError: createAction<string>(ProductsMessages.ADD_PRODUCT_ERROR),
+  fetchAllProducts: createAction(ProductsMessages.FETCH_ALL_PRODUCTS),
+  setAllProducts: createAction<[]>(ProductsMessages.SET_ALL_PRODUCTS),
 }
 
 export const productsReducer = createReducer(initialState as ProductsStore, (builder) => {
@@ -27,5 +31,8 @@ export const productsReducer = createReducer(initialState as ProductsStore, (bui
     })
     .addCase(productsActions.setAddProductError, (state, action: PayloadAction<string>) => {
       state.errorMessage = action.payload;
+    })
+    .addCase(productsActions.setAllProducts, (state, action: PayloadAction<Product[]>) => {
+      state.products = action.payload;
     })
 })

@@ -6,13 +6,11 @@ import {
   Image,
   StyleSheet,
   Platform,
-  Dimensions,
   Alert,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IoIcon from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native';
+import { DrawerActions, NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
@@ -9,6 +9,8 @@ import HelloScreen from '../screens/hello/Hello';
 import ProductScreen from '../screens/product/Product';
 import LoginScreen from '../screens/login/Login';
 import RegisterScreen from '../screens/register/Register';
+import ProductsLists from '../screens/ProductList/ProductsList'
+import ProductSingle from '../screens/ProductSingle/ProductSingle';
 
 import MenuIcon from '../components/MenuIcon/MenuIcon'
 
@@ -17,8 +19,27 @@ export type RootStackParamList = {
   NotFound: undefined;
 };
 
+const navigationRef = React.createRef<any>();
 
-const DRawer = createDrawerNavigator()
+export function openDrawer() {
+  if (navigationRef && navigationRef.current) {
+    console.log("DSDSDS")
+    navigationRef.current && navigationRef.current.dispatch(DrawerActions.openDrawer());
+  }
+}
+
+export function mainNavigate(name: any, params: any) {
+  if (navigationRef && navigationRef.current) {
+    navigationRef.current && navigationRef.current.navigate(name, params);
+  }
+}
+
+
+// function openDrawer(routeName, params) {
+//   _navigator.dispatch(DrawerActions.openDrawer());
+// }
+
+const DRawer = createDrawerNavigator();
 
 function DRawerNavigation({ navigation }) {
   return (
@@ -35,6 +56,9 @@ function DRawerNavigation({ navigation }) {
       <DRawer.Screen name="Product" component={ProductScreen} options={{
         title: "Product Screen"
       }} />
+      <DRawer.Screen name="ProductsList" component={ProductsLists} options={{
+        title: "Product  List"
+      }} />
     </DRawer.Navigator>
   )
 }
@@ -43,13 +67,18 @@ const StackApp = createStackNavigator();
 
 export function RootNavigator() {
   return (
-    <NavigationContainer>
-      <StackApp.Navigator>
+    <NavigationContainer ref={navigationRef}>
+      <StackApp.Navigator mode="card">
+
+
+
         <StackApp.Screen name="StartupScreen" component={StartupScreen}
-          options={{
+          options={({ navigation }) => ({
+
+
             headerShown: false,
             title: 'Startup Page', //Set Header Title
-            headerLeft: () => <MenuIcon />,
+            headerLeft: () => <MenuIcon navigation={navigation} />,
             headerStyle: {
               backgroundColor: '#fff', //Set Header color
             },
@@ -57,7 +86,7 @@ export function RootNavigator() {
             headerTitleStyle: {
               fontWeight: 'bold', //Set Header text style
             },
-          }} />
+          })} />
 
         <StackApp.Screen name="Login" component={LoginScreen}
           options={{
@@ -87,6 +116,22 @@ export function RootNavigator() {
             },
           }} />
 
+        <StackApp.Screen
+          name="ProductSingle"
+          component={ProductSingle}
+          options={({ navigation }) => ({
+            headerShown: false,
+            title: 'Product Page', //Set Header Title
+            headerLeft: () => <MenuIcon navigation={navigation} />,
+            headerStyle: {
+              backgroundColor: '#fff', //Set Header color
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontWeight: 'bold', //Set Header text style
+            },
+          })} />
+
         <StackApp.Screen name="Hello" component={DRawerNavigation}
           options={{
             headerShown: false,
@@ -100,6 +145,7 @@ export function RootNavigator() {
               fontWeight: 'bold', //Set Header text style
             },
           }} />
+
       </StackApp.Navigator>
     </NavigationContainer >
   )

@@ -10,27 +10,27 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import MenuIcon from '../../components/MenuIcon/MenuIcon'
+// import MenuIcon from '../../components/MenuIcon/MenuIcon'
 import CustomHeader from '../../components/CustomHeader/CustomHeader';
 import { Colors } from '../../constants/Colors';
 
 const HelloScreen = (props) => {
   const navigation = useNavigation();
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: (props: StackHeaderLeftButtonProps) => (<MenuIcon />)
-    });
-  }, []);
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerLeft: (props: StackHeaderLeftButtonProps) => (<MenuIcon />)
+  //   });
+  // }, []);
 
   return (
     <ScrollView>
-      <CustomHeader title="Hello Screen" isHome={false} />
+      {/* <CustomHeader title="Hello Screen" isHome={false} /> */}
       <View style={styles.screen}>
         <Text>It is home screen ! Do whatever you want to do</Text>
       </View>
       <View>
-        <Button
+        {/* <Button
           buttonStyle={styles.button}
           containerStyle={styles.containerButton}
           title="Go to product screen"
@@ -43,7 +43,7 @@ const HelloScreen = (props) => {
               style={{ paddingRight: 10 }}
             />
           }
-        />
+        /> */}
       </View>
     </ScrollView>
   );

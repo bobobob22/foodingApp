@@ -138,21 +138,7 @@ const RegisterScreen = (props) => {
         <Button
           buttonStyle={styles.button}
           containerStyle={styles.containerButton}
-          title="Go adsadsadsa login"
-          onPress={openDrawer}
-          icon={
-            <Icon
-              name="arrow-right"
-              size={15}
-              color="white"
-              style={{ paddingRight: 10 }}
-            />
-          }
-        />
-        <Button
-          buttonStyle={styles.button}
-          containerStyle={styles.containerButton}
-          title="Go hello login"
+          title="Go hello page"
           onPress={() => navigation.navigate('Hello')}
           icon={
             <Icon
